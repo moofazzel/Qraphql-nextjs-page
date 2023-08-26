@@ -17,7 +17,7 @@ export default function Home() {
     <>
       <h1>Helloo !!! </h1>
       <div>
-        {users.map(user => <p>{user.name || "No User Found"}</p>)}
+        {users.map((user, i) => <p key={i}>{user.name || "No User Found"}</p>)}
       </div>
     </>
 
