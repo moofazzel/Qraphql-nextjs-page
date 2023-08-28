@@ -25,7 +25,7 @@ export const config = {
 };
 
 const corsOptions = process.env.NODE_ENV === 'production'
-    ? { origin: process.env.NEXT_PUBLIC_GRAPHQL_API }
+    ? { origin: process.env.NEXT_PUBLIC_PRODUCTION_URL }
     : { origin: '*' };
 
 
