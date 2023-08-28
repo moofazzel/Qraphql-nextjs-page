@@ -30,25 +30,30 @@ const corsOptions = {
 };
 
 export default async (req, res) => {
-    // Run the cors middleware
-    await new Promise((resolve, reject) => {
-        cors(corsOptions)(req, res, (result) => {
-            if (result instanceof Error) {
-                return reject(result);
-            }
-            return resolve(result);
+    if (process.env.NODE_ENV !== 'production') {
+        // Run the cors middleware
+        await new Promise((resolve, reject) => {
+            cors(corsOptions)(req, res, (result) => {
+                if (result instanceof Error) {
+                    return reject(result);
+                }
+                return resolve(result);
+            });
         });
-    });
 
-    if (req.method === 'OPTIONS') {
-        res.end();
-        return;
+        if (req.method === 'OPTIONS') {
+            res.end();
+            return;
+        }
+
+        if (!isApolloServerStarted) {
+            await apolloServer.start();
+            isApolloServerStarted = true;
+        }
+
+        return apolloServer.createHandler({ path: '/api/graphql' })(req, res);
+    } else {
+        res.status(403).send('Forbidden');
     }
-
-    if (!isApolloServerStarted) {
-        await apolloServer.start();
-        isApolloServerStarted = true;
-    }
-
-    return apolloServer.createHandler({ path: '/api/graphql' })(req, res);
 };
+
