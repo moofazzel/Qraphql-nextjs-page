@@ -24,10 +24,10 @@ export const config = {
     },
 };
 
-const corsOptions = {
-    origin: '*',
-    methods: 'POST',
-};
+const corsOptions = process.env.NODE_ENV === 'production'
+    ? { origin: process.env.NEXT_PUBLIC_GRAPHQL_API }
+    : { origin: '*' };
+
 
 export default async (req, res) => {
     if (process.env.NODE_ENV !== 'production') {
